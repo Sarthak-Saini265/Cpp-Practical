@@ -1,0 +1,571 @@
+Q1. Program to compute the sum of the first n terms of the series:
+S = 1 - 1/2^2 + 1/3^3 - ... + 1/n^n
+
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+int main(int argc, char* argv[]) {
+    int n;
+    if (argc > 1)
+        n = atoi(argv[1]);
+    else {
+        cout << "Enter value of n: ";
+        cin >> n;
+    }
+
+    double sum = 1.0;
+    for (int i = 2; i <= n; i++) {
+        sum += pow(-1, i + 1) / pow(i, i);
+    }
+
+    cout << "Sum = " << sum << endl;
+    return 0;
+}
+
+
+---
+
+Q2. Program to remove duplicates from an array:
+
+#include <iostream>
+using namespace std;
+
+int main() {
+    int arr[100], n;
+    cout << "Enter number of elements: ";
+    cin >> n;
+
+    cout << "Enter elements:
+";
+    for (int i = 0; i < n; i++) cin >> arr[i];
+
+    cout << "Array after removing duplicates:
+";
+    for (int i = 0; i < n; i++) {
+        bool duplicate = false;
+        for (int j = 0; j < i; j++) {
+            if (arr[i] == arr[j]) {
+                duplicate = true;
+                break;
+            }
+        }
+        if (!duplicate) cout << arr[i] << " ";
+    }
+    return 0;
+}
+
+
+---
+
+Q3. Program to count occurrences of each alphabet from command line text:
+
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+int main(int argc, char* argv[]) {
+    int count[26] = {0};
+    for (int i = 1; i < argc; i++) {
+        for (int j = 0; argv[i][j]; j++) {
+            char ch = tolower(argv[i][j]);
+            if (ch >= 'a' && ch <= 'z') {
+                count[ch - 'a']++;
+            }
+        }
+    }
+
+    cout << "Character occurrences:
+";
+    for (int i = 0; i < 26; i++) {
+        if (count[i] > 0)
+            cout << char(i + 'a') << ": " << count[i] << endl;
+    }
+    return 0;
+}
+
+
+---
+
+Q4. Menu-driven string manipulation without using string functions:
+
+#include <iostream>
+using namespace std;
+
+int strlen_custom(char *s) {
+    int len = 0;
+    while (s[len] != '\0') len++;
+    return len;
+}
+
+void to_upper(char *s) {
+    for (int i = 0; s[i]; i++)
+        if (s[i] >= 'a' && s[i] <= 'z')
+            s[i] -= 32;
+}
+
+void reverse(char *s) {
+    int len = strlen_custom(s);
+    for (int i = 0; i < len / 2; i++) {
+        char t = s[i];
+        s[i] = s[len - i - 1];
+        s[len - i - 1] = t;
+    }
+}
+
+int main() {
+    char str1[100], str2[100], result[200];
+    int choice, pos;
+
+    cout << "Enter first string: ";
+    cin >> str1;
+
+    do {
+        cout << "\nMenu:\n";
+        cout << "1. Show address of each character\n";
+        cout << "2. Concatenate\n";
+        cout << "3. Compare\n";
+        cout << "4. Length (pointer)\n";
+        cout << "5. To Uppercase\n";
+        cout << "6. Reverse\n";
+        cout << "7. Insert another string\n";
+        cout << "8. Exit\n";
+        cout << "Enter choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1:
+                for (int i = 0; str1[i]; i++)
+                    cout << str1[i] << ": " << (void*)&str1[i] << endl;
+                break;
+            case 2:
+                cout << "Enter second string: ";
+                cin >> str2;
+                int i = 0, j = 0;
+                while (str1[i]) {
+                    result[i] = str1[i];
+                    i++;
+                }
+                while (str2[j]) {
+                    result[i++] = str2[j++];
+                }
+                result[i] = '\0';
+                cout << "Concatenated: " << result << endl;
+                break;
+            case 3:
+                cout << "Enter second string: ";
+                cin >> str2;
+                int k = 0;
+                while (str1[k] && str2[k] && str1[k] == str2[k]) k++;
+                if (str1[k] == str2[k]) cout << "Strings are equal\n";
+                else cout << "Strings are not equal\n";
+                break;
+            case 4:
+                cout << "Length: " << strlen_custom(str1) << endl;
+                break;
+            case 5:
+                to_upper(str1);
+                cout << "Uppercase: " << str1 << endl;
+                break;
+            case 6:
+                reverse(str1);
+                cout << "Reversed: " << str1 << endl;
+                break;
+            case 7:
+                cout << "Enter string to insert: ";
+                cin >> str2;
+                cout << "Enter position: ";
+                cin >> pos;
+                int len1 = strlen_custom(str1), len2 = strlen_custom(str2);
+                for (i = 0; i < pos; i++) result[i] = str1[i];
+                for (j = 0; j < len2; j++) result[i++] = str2[j];
+                for (j = pos; j < len1; j++) result[i++] = str1[j];
+                result[i] = '\0';
+                cout << "After insertion: " << result << endl;
+                break;
+        }
+    } while (choice != 8);
+
+    return 0;
+}
+
+
+---
+
+Q5. Program to merge two ordered arrays into a single ordered array:
+
+#include <iostream>
+using namespace std;
+
+int main() {
+    int a[100], b[100], c[200], n1, n2, i = 0, j = 0, k = 0;
+    cout << "Enter size of first array: ";
+    cin >> n1;
+    cout << "Enter sorted elements of first array:
+";
+    for (int x = 0; x < n1; x++) cin >> a[x];
+
+    cout << "Enter size of second array: ";
+    cin >> n2;
+    cout << "Enter sorted elements of second array:
+";
+    for (int x = 0; x < n2; x++) cin >> b[x];
+
+    while (i < n1 && j < n2)
+        c[k++] = (a[i] < b[j]) ? a[i++] : b[j++];
+
+    while (i < n1) c[k++] = a[i++];
+    while (j < n2) c[k++] = b[j++];
+
+    cout << "Merged array:
+";
+    for (i = 0; i < k; i++) cout << c[i] << " ";
+    return 0;
+}
+
+
+---
+
+Q6. Program for Binary Search with and without recursion:
+
+#include <iostream>
+using namespace std;
+
+int binarySearchIter(int arr[], int n, int key) {
+    int low = 0, high = n - 1;
+    while (low <= high) {
+        int mid = (low + high) / 2;
+        if (arr[mid] == key) return mid;
+        else if (arr[mid] < key) low = mid + 1;
+        else high = mid - 1;
+    }
+    return -1;
+}
+
+int binarySearchRec(int arr[], int low, int high, int key) {
+    if (low > high) return -1;
+    int mid = (low + high) / 2;
+    if (arr[mid] == key) return mid;
+    else if (arr[mid] < key)
+        return binarySearchRec(arr, mid + 1, high, key);
+    else
+        return binarySearchRec(arr, low, mid - 1, key);
+}
+
+int main() {
+    int arr[100], n, key;
+    cout << "Enter number of elements: ";
+    cin >> n;
+    cout << "Enter sorted array:
+";
+    for (int i = 0; i < n; i++) cin >> arr[i];
+    cout << "Enter element to search: ";
+    cin >> key;
+
+    int idx1 = binarySearchIter(arr, n, key);
+    int idx2 = binarySearchRec(arr, 0, n - 1, key);
+
+    cout << "Iterative Search Index: " << idx1 << endl;
+    cout << "Recursive Search Index: " << idx2 << endl;
+    return 0;
+}
+
+
+---
+
+Q7. Program to calculate GCD with and without recursion:
+
+#include <iostream>
+using namespace std;
+
+int gcdRec(int a, int b) {
+    return b == 0 ? a : gcdRec(b, a % b);
+}
+
+int gcdIter(int a, int b) {
+    while (b != 0) {
+        int temp = b;
+        b = a % b;
+        a = temp;
+    }
+    return a;
+}
+
+int main() {
+    int a, b;
+    cout << "Enter two numbers: ";
+    cin >> a >> b;
+    cout << "GCD (recursive): " << gcdRec(a, b) << endl;
+    cout << "GCD (iterative): " << gcdIter(a, b) << endl;
+    return 0;
+}
+
+
+---
+
+Q8. Matrix class for sum, product and transpose:
+
+#include <iostream>
+using namespace std;
+
+class Matrix {
+    int a[10][10], row, col;
+
+public:
+    void input() {
+        cout << "Enter rows and cols: ";
+        cin >> row >> col;
+        cout << "Enter elements:
+";
+        for (int i = 0; i < row; i++)
+            for (int j = 0; j < col; j++)
+                cin >> a[i][j];
+    }
+
+    void display() {
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++)
+                cout << a[i][j] << " ";
+            cout << endl;
+        }
+    }
+
+    Matrix add(Matrix m) {
+        Matrix res;
+        res.row = row;
+        res.col = col;
+        for (int i = 0; i < row; i++)
+            for (int j = 0; j < col; j++)
+                res.a[i][j] = a[i][j] + m.a[i][j];
+        return res;
+    }
+
+    Matrix multiply(Matrix m) {
+        Matrix res;
+        res.row = row;
+        res.col = m.col;
+        for (int i = 0; i < row; i++)
+            for (int j = 0; j < m.col; j++) {
+                res.a[i][j] = 0;
+                for (int k = 0; k < col; k++)
+                    res.a[i][j] += a[i][k] * m.a[k][j];
+            }
+        return res;
+    }
+
+    Matrix transpose() {
+        Matrix res;
+        res.row = col;
+        res.col = row;
+        for (int i = 0; i < row; i++)
+            for (int j = 0; j < col; j++)
+                res.a[j][i] = a[i][j];
+        return res;
+    }
+};
+
+int main() {
+    Matrix m1, m2, result;
+    int choice;
+    m1.input();
+    m2.input();
+
+    cout << "1. Add\n2. Multiply\n3. Transpose first\n";
+    cin >> choice;
+
+    switch (choice) {
+        case 1:
+            result = m1.add(m2);
+            break;
+        case 2:
+            result = m1.multiply(m2);
+            break;
+        case 3:
+            result = m1.transpose();
+            break;
+    }
+    result.display();
+    return 0;
+}
+
+
+---
+
+Q9. Program using inheritance and polymorphism with Person, Student, and Employee:
+
+#include <iostream>
+using namespace std;
+
+class Person {
+protected:
+    string name;
+public:
+    void getData() {
+        cout << "Enter name: ";
+        cin >> name;
+    }
+    virtual void display() {
+        cout << "Name: " << name << endl;
+    }
+};
+
+class Student : public Person {
+    string course;
+    int marks, year;
+public:
+    void getData() {
+        Person::getData();
+        cout << "Enter course, marks, year: ";
+        cin >> course >> marks >> year;
+    }
+    void display() override {
+        cout << "Student: " << name << ", Course: " << course << ", Marks: " << marks << ", Year: " << year << endl;
+    }
+};
+
+class Employee : public Person {
+    string dept;
+    float salary;
+public:
+    void getData() {
+        Person::getData();
+        cout << "Enter department and salary: ";
+        cin >> dept >> salary;
+    }
+    void display() override {
+        cout << "Employee: " << name << ", Dept: " << dept << ", Salary: " << salary << endl;
+    }
+};
+
+int main() {
+    Person *p;
+    Student s;
+    Employee e;
+
+    s.getData();
+    e.getData();
+
+    p = &s;
+    p->display();
+
+    p = &e;
+    p->display();
+
+    return 0;
+}
+
+
+---
+
+Q10. Triangle class with exception handling and overloaded area functions:
+
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+class Triangle {
+    double a, b, c;
+public:
+    Triangle(double x, double y, double z) {
+        if (x <= 0 || y <= 0 || z <= 0)
+            throw "Sides must be > 0.";
+        if (x + y <= z || x + z <= y || y + z <= x)
+            throw "Sum of any two sides must be greater than third side.";
+        a = x; b = y; c = z;
+    }
+
+    double area() {
+        double s = (a + b + c) / 2;
+        return sqrt(s * (s - a) * (s - b) * (s - c));
+    }
+
+    double area(double base, double height) {
+        return 0.5 * base * height;
+    }
+};
+
+int main() {
+    try {
+        Triangle t(3, 4, 5);
+        cout << "Area (Heron): " << t.area() << endl;
+        cout << "Area (Right Triangle): " << t.area(3, 4) << endl;
+    } catch (const char* msg) {
+        cout << "Error: " << msg << endl;
+    }
+    return 0;
+}
+
+
+---
+
+Q11. Store and retrieve Student objects in a file:
+
+#include <iostream>
+#include <fstream>
+using namespace std;
+
+class Student {
+public:
+    int roll;
+    char name[30];
+    char cls[10];
+    int year;
+    float marks;
+
+    void input() {
+        cout << "Enter roll, name, class, year, marks: ";
+        cin >> roll >> name >> cls >> year >> marks;
+    }
+
+    void display() {
+        cout << roll << " " << name << " " << cls << " " << year << " " << marks << endl;
+    }
+};
+
+int main() {
+    Student s[5];
+    ofstream fout("students.txt", ios::binary);
+    for (int i = 0; i < 5; i++) {
+        s[i].input();
+        fout.write((char*)&s[i], sizeof(s[i]));
+    }
+    fout.close();
+
+    Student s2;
+    ifstream fin("students.txt", ios::binary);
+    while (fin.read((char*)&s2, sizeof(s2)))
+        s2.display();
+    fin.close();
+    return 0;
+}
+
+
+---
+
+Q12. Copy file removing all whitespaces:
+
+#include <iostream>
+#include <fstream>
+using namespace std;
+
+int main() {
+    ifstream fin("input.txt");
+    ofstream fout("output.txt");
+
+    char ch;
+    while (fin.get(ch)) {
+        if (!isspace(ch))
+            fout.put(ch);
+    }
+
+    fin.close();
+    fout.close();
+
+    cout << "Whitespace removed and copied to output.txt
+";
+    return 0;
+}
+
+
+---
+
